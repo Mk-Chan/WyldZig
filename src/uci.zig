@@ -36,16 +36,6 @@ pub fn uci() void {
 
     var board: Board = Board.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-    //var move_list = MoveList{};
-    //var move_list_iterator = MoveList.Iterator{ .iter = &move_list.list };
-    //const size = board.generatePseudolegalMoves(&move_list_iterator);
-    //console.println("Size: {}", .{size});
-    //var moveNum: u8 = 0;
-    //while (moveNum < size) {
-    //    console.println("Move: {}", .{move_list.list[moveNum]});
-    //    moveNum += 1;
-    //}
-
     var input_buffer: [2048]u8 = undefined;
     while (true) {
         const line = console.readln(input_buffer[0..]) orelse break;

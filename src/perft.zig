@@ -20,6 +20,7 @@ pub fn perft(board: *Board, depth: usize, root: bool) u64 {
 
         var child = board.*;
         child.makeMove(move);
+        //var old_leaf_count = leaf_count;
         leaf_count += perft(&child, depth - 1, false);
 
         //if (root) {
