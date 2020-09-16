@@ -12,21 +12,17 @@ fn xrayMaskBB() [64][64]u64 {
     _ = @setEvalBranchQuota(33000);
     var masks: [64][64]u64 = undefined;
     var from: i32 = 0;
-    while (from < 64) {
-        defer from += 1;
+    while (from < 64) : (from += 1) {
         var to: i32 = 0;
-        while (to < 64) {
-            defer to += 1;
+        while (to < 64) : (to += 1) {
             masks[@intCast(usize, from)][@intCast(usize, to)] = 0;
         }
     }
 
     from = 0;
-    while (from < 64) {
-        defer from += 1;
+    while (from < 64) : (from += 1) {
         var to: i32 = 0;
-        while (to < 64) {
-            defer to += 1;
+        while (to < 64) : (to += 1) {
             if (from == to) {
                 continue;
             }
@@ -58,21 +54,17 @@ fn interveningMaskBB() [64][64]u64 {
     _ = @setEvalBranchQuota(33000);
     var masks: [64][64]u64 = undefined;
     var from: i32 = 0;
-    while (from < 64) {
-        defer from += 1;
+    while (from < 64) : (from += 1) {
         var to: i32 = 0;
-        while (to < 64) {
-            defer to += 1;
+        while (to < 64) : (to += 1) {
             masks[@intCast(usize, from)][@intCast(usize, to)] = 0;
         }
     }
 
     from = 0;
-    while (from < 64) {
-        defer from += 1;
+    while (from < 64) : (from += 1) {
         var to: i32 = 0;
-        while (to < 64) {
-            defer to += 1;
+        while (to < 64) : (to += 1) {
             if (from == to) {
                 continue;
             }
