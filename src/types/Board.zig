@@ -155,10 +155,10 @@ pub fn parse(fen: []const u8) Board {
             break;
         } else {
             board.castling_rights_bitset |= switch (ch) {
-                'K' => @intCast(u4, 1),
-                'Q' => @intCast(u4, 2),
-                'k' => @intCast(u4, 4),
-                'q' => @intCast(u4, 8),
+                'K' => @as(u4, 1),
+                'Q' => @as(u4, 2),
+                'k' => @as(u4, 4),
+                'q' => @as(u4, 8),
                 else => unreachable, // TODO: Handle error
             };
         }
@@ -787,7 +787,7 @@ fn moveTypeOf(self: *Board, move: Move) Move.Type {
     } else if (captured_piece_type != .None) {
         return .Capture;
     } else if (moving_piece_type == Piece.Type.Pawn) {
-        const square_diff = std.math.absCast(@intCast(i32, @enumToInt(to)) - @intCast(i32, @enumToInt(from)));
+        const square_diff = std.math.absCast(@as(i32, @enumToInt(to)) - @as(i32, @enumToInt(from)));
         if (square_diff == 16) {
             return .DoublePush;
         } else if (to == self.enpassant_square) {
@@ -795,7 +795,7 @@ fn moveTypeOf(self: *Board, move: Move) Move.Type {
         } else {
             return .Normal;
         }
-    } else if (moving_piece_type == Piece.Type.King and std.math.absCast(@intCast(i32, @enumToInt(to)) - @intCast(i32, @enumToInt(from))) == 2) {
+    } else if (moving_piece_type == Piece.Type.King and std.math.absCast(@as(i32, @enumToInt(to)) - @as(i32, @enumToInt(from))) == 2) {
         return .Castling;
     } else {
         return .Normal;

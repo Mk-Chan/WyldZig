@@ -3,7 +3,7 @@ const std = @import("std");
 const Square = @import("../types/enums.zig").Square;
 
 pub inline fn toBitboard(shift_value: u6) u64 {
-    return @intCast(u64, 1) << shift_value;
+    return @as(u64, 1) << shift_value;
 }
 
 pub inline fn bitscanForward(bb: u64) u7 {
@@ -23,5 +23,5 @@ pub inline fn popBitForward(bb: *u64) void {
 }
 
 pub inline fn popBitReverse(bb: *u64) void {
-    bb.* ^= @intCast(u64, 1) << @intCast(u6, bitscanReverse(bb.*) + 1);
+    bb.* ^= @as(u64, 1) << @as(u6, bitscanReverse(bb.*) + 1);
 }

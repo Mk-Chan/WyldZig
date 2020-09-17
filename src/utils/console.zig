@@ -27,7 +27,7 @@ pub fn printBitboard(bitboard: u64) void {
         if (sq != 0 and (sq & 7) == 0) {
             println("", .{});
         }
-        if (((@intCast(u64, 1) << @intCast(u6, (sq ^ 56))) & bitboard) != 0) {
+        if (((@as(u64, 1) << @as(u6, (sq ^ 56))) & bitboard) != 0) {
             printf("X ", .{});
         } else {
             printf("- ", .{});

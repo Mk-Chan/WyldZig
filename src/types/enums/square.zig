@@ -30,7 +30,7 @@ pub const Square = enum(u8) {
 
     pub inline fn toBitboard(self: Square) u64 {
         assert(self != .None);
-        return @intCast(u64, 1) << @intCast(u6, @enumToInt(self));
+        return @as(u64, 1) << @intCast(u6, @enumToInt(self));
     }
 
     pub inline fn toString(self: Square) [2]u8 {
