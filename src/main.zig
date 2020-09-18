@@ -9,7 +9,7 @@ pub fn main() void {
     console.println("WyldZig by Manik Charan", .{});
     var input_buffer: [2048]u8 = undefined;
     while (true) {
-        const line = console.readln(input_buffer[0..]) orelse break;
+        const line = console.readln(input_buffer[0..]);
         if (string.equals(line, "uci")) {
             uci.uci();
             break;

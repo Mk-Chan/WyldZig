@@ -1,9 +1,7 @@
 const std = @import("std");
 
-const stdout = std.io.getStdOut().writer();
-const stdin = std.io.getStdIn().reader();
-
 pub fn printf(comptime fmt: []const u8, args: anytype) void {
+    const stdout = std.io.getStdOut().writer();
     stdout.print(fmt, args) catch |err| {};
 }
 
@@ -15,10 +13,12 @@ pub fn printNewLine() void {
     printf("\n", .{});
 }
 
-pub fn readln(buf: []u8) ?[]u8 {
-    return stdin.readUntilDelimiterOrEof(buf, '\n') catch |err| {
-        return null;
-    };
+pub fn readln(buf: []u8) []const u8 {
+    const stdin = std.io.getStdIn().reader();
+    var line = stdin.readUntilDelimiterOrEof(buf, '\n') catch |err| {
+        unreachable;
+    } orelse unreachable;
+    return std.mem.trimRight(u8, line[0..], "\r");
 }
 
 pub fn printBitboard(bitboard: u64) void {

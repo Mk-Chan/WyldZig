@@ -38,7 +38,7 @@ pub fn uci() void {
 
     var input_buffer: [2048]u8 = undefined;
     while (true) {
-        const line = console.readln(input_buffer[0..]) orelse break;
+        const line = console.readln(input_buffer[0..]);
         if (string.equals(line, "quit")) {
             break;
         } else if (string.startsWith(line, "position")) {
