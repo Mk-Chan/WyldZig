@@ -5,8 +5,8 @@ const attacks = @import("attacks.zig");
 pub const file_masks = [8]u64{ 0x0101010101010101, 0x0202020202020202, 0x0404040404040404, 0x0808080808080808, 0x1010101010101010, 0x2020202020202020, 0x4040404040404040, 0x8080808080808080 };
 pub const rank_masks = [8]u64{ 0xff, 0xff00, 0xff0000, 0xff000000, 0xff00000000, 0xff0000000000, 0xff000000000000, 0xff00000000000000 };
 
-pub const xray_masks: [64][64]u64 = comptime xrayMaskBB();
-pub const intervening_masks: [64][64]u64 = comptime interveningMaskBB();
+pub const xray_masks: [64][64]u64 = xrayMaskBB();
+pub const intervening_masks: [64][64]u64 = interveningMaskBB();
 
 fn xrayMaskBB() [64][64]u64 {
     _ = @setEvalBranchQuota(33000);

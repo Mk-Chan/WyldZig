@@ -1,4 +1,4 @@
-usingnamespace @import("../utils/bitboard.zig");
+const bitboard = @import("../utils/bitboard.zig");
 
 const console = @import("../utils/console.zig");
 
@@ -9,21 +9,21 @@ const Square = @import("../types/enums.zig").Square;
 const File = @import("../types/enums.zig").File;
 const Piece = @import("../types/Piece.zig");
 
-pub const north_bb = comptime northBB();
-pub const south_bb = comptime southBB();
-pub const east_bb = comptime eastBB();
-pub const west_bb = comptime westBB();
-pub const north_west_bb = comptime northWestBB();
-pub const south_west_bb = comptime southWestBB();
-pub const north_east_bb = comptime northEastBB();
-pub const south_east_bb = comptime southEastBB();
+pub const north_bb = northBB();
+pub const south_bb = southBB();
+pub const east_bb = eastBB();
+pub const west_bb = westBB();
+pub const north_west_bb = northWestBB();
+pub const south_west_bb = southWestBB();
+pub const north_east_bb = northEastBB();
+pub const south_east_bb = southEastBB();
 
-const pawn_attacks_bb = comptime pawnAttacksBB();
-const knight_attacks_bb = comptime knightAttacksBB();
-const bishop_pseudo_attacks_bb = comptime bishopPseudoAttacksBB();
-const rook_pseudo_attacks_bb = comptime rookPseudoAttacksBB();
-const queen_pseudo_attacks_bb = comptime queenPseudoAttacksBB();
-const king_attacks_bb = comptime kingAttacksBB();
+const pawn_attacks_bb = pawnAttacksBB();
+const knight_attacks_bb = knightAttacksBB();
+const bishop_pseudo_attacks_bb = bishopPseudoAttacksBB();
+const rook_pseudo_attacks_bb = rookPseudoAttacksBB();
+const queen_pseudo_attacks_bb = queenPseudoAttacksBB();
+const king_attacks_bb = kingAttacksBB();
 
 pub fn pawnAttacks(square: Square, color: Color) u64 {
     return pawn_attacks_bb[@enumToInt(color)][@enumToInt(square)];
@@ -53,10 +53,10 @@ pub fn bishopAttacks(square: Square, occupancy_bb: u64) u64 {
     const se_blockers = (south_east_bb[square_v] & occupancy_bb) | Square.H1.toBitboard();
 
     return bishop_pseudo_attacks_bb[square_v] ^
-        north_west_bb[bitscanForward(nw_blockers)] ^
-        north_east_bb[bitscanForward(ne_blockers)] ^
-        south_west_bb[bitscanReverse(sw_blockers)] ^
-        south_east_bb[bitscanReverse(se_blockers)];
+        north_west_bb[bitboard.bitscanForward(nw_blockers)] ^
+        north_east_bb[bitboard.bitscanForward(ne_blockers)] ^
+        south_west_bb[bitboard.bitscanReverse(sw_blockers)] ^
+        south_east_bb[bitboard.bitscanReverse(se_blockers)];
 }
 
 pub fn rookAttacks(square: Square, occupancy_bb: u64) u64 {
@@ -68,10 +68,10 @@ pub fn rookAttacks(square: Square, occupancy_bb: u64) u64 {
     const e_blockers = (east_bb[square_v] & occupancy_bb) | Square.H8.toBitboard();
 
     return rook_pseudo_attacks_bb[square_v] ^
-        north_bb[bitscanForward(n_blockers)] ^
-        south_bb[bitscanReverse(s_blockers)] ^
-        west_bb[bitscanReverse(w_blockers)] ^
-        east_bb[bitscanForward(e_blockers)];
+        north_bb[bitboard.bitscanForward(n_blockers)] ^
+        south_bb[bitboard.bitscanReverse(s_blockers)] ^
+        west_bb[bitboard.bitscanReverse(w_blockers)] ^
+        east_bb[bitboard.bitscanForward(e_blockers)];
 }
 
 pub fn queenAttacks(square: Square, occupancy_bb: u64) u64 {
@@ -89,7 +89,7 @@ fn northBB() [64]u64 {
         var bb: u64 = 0;
         var attack_sq: i32 = square + 8;
         while (attack_sq <= @enumToInt(Square.H8)) : (attack_sq += 8) {
-            bb |= toBitboard(@intCast(u6, attack_sq));
+            bb |= bitboard.toBitboard(@intCast(u6, attack_sq));
         }
         attacks[square] = bb;
     }
@@ -103,7 +103,7 @@ fn southBB() [64]u64 {
         var bb: u64 = 0;
         var attack_sq: i32 = square - 8;
         while (attack_sq >= @enumToInt(Square.A1)) : (attack_sq -= 8) {
-            bb |= toBitboard(@intCast(u6, attack_sq));
+            bb |= bitboard.toBitboard(@intCast(u6, attack_sq));
         }
         attacks[square] = bb;
     }
@@ -117,7 +117,7 @@ fn eastBB() [64]u64 {
         var bb: u64 = 0;
         var attack_sq: i32 = square + 1;
         while (attack_sq <= @enumToInt(Square.H8)) : (attack_sq += 1) {
-            const bb_tmp = toBitboard(@intCast(u6, attack_sq));
+            const bb_tmp = bitboard.toBitboard(@intCast(u6, attack_sq));
             if ((bb_tmp & masks.file_masks[@enumToInt(File.A)]) != 0) {
                 break;
             }
@@ -135,7 +135,7 @@ fn westBB() [64]u64 {
         var bb: u64 = 0;
         var attack_sq: i32 = square - 1;
         while (attack_sq >= @enumToInt(Square.A1)) : (attack_sq -= 1) {
-            const bb_tmp = toBitboard(@intCast(u6, attack_sq));
+            const bb_tmp = bitboard.toBitboard(@intCast(u6, attack_sq));
             if ((bb_tmp & masks.file_masks[@enumToInt(File.H)]) != 0) {
                 break;
             }
@@ -153,7 +153,7 @@ fn northWestBB() [64]u64 {
         var bb: u64 = 0;
         var attack_sq: i32 = square + 7;
         while (attack_sq <= @enumToInt(Square.H8)) : (attack_sq += 7) {
-            const bb_tmp = toBitboard(@intCast(u6, attack_sq));
+            const bb_tmp = bitboard.toBitboard(@intCast(u6, attack_sq));
             if ((bb_tmp & masks.file_masks[@enumToInt(File.H)]) != 0) {
                 break;
             }
@@ -171,7 +171,7 @@ fn southWestBB() [64]u64 {
         var bb: u64 = 0;
         var attack_sq: i32 = square - 9;
         while (attack_sq >= @enumToInt(Square.A1)) : (attack_sq -= 9) {
-            const bb_tmp = toBitboard(@intCast(u6, attack_sq));
+            const bb_tmp = bitboard.toBitboard(@intCast(u6, attack_sq));
             if ((bb_tmp & masks.file_masks[@enumToInt(File.H)]) != 0) {
                 break;
             }
@@ -189,7 +189,7 @@ fn northEastBB() [64]u64 {
         var bb: u64 = 0;
         var attack_sq: i32 = square + 9;
         while (attack_sq <= @enumToInt(Square.H8)) : (attack_sq += 9) {
-            const bb_tmp = toBitboard(@intCast(u6, attack_sq));
+            const bb_tmp = bitboard.toBitboard(@intCast(u6, attack_sq));
             if ((bb_tmp & masks.file_masks[@enumToInt(File.A)]) != 0) {
                 break;
             }
@@ -207,7 +207,7 @@ fn southEastBB() [64]u64 {
         var bb: u64 = 0;
         var attack_sq: i32 = square - 7;
         while (attack_sq >= @enumToInt(Square.A1)) : (attack_sq -= 7) {
-            const bb_tmp = toBitboard(@intCast(u6, attack_sq));
+            const bb_tmp = bitboard.toBitboard(@intCast(u6, attack_sq));
             if ((bb_tmp & masks.file_masks[@enumToInt(File.A)]) != 0) {
                 break;
             }
@@ -226,16 +226,16 @@ fn pawnAttacksBB() [2][64]u64 {
     for (Square.all) |square| {
         const square_v = @enumToInt(square);
         if (square_v <= @enumToInt(Square.H7)) {
-            attacks[@enumToInt(Color.White)][square_v] |= toBitboard(@intCast(u6, square_v + 7)) & ~masks.file_masks[@enumToInt(File.H)];
+            attacks[@enumToInt(Color.White)][square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 7)) & ~masks.file_masks[@enumToInt(File.H)];
         }
         if (square_v <= @enumToInt(Square.G7)) {
-            attacks[@enumToInt(Color.White)][square_v] |= toBitboard(@intCast(u6, square_v + 9)) & ~masks.file_masks[@enumToInt(File.A)];
+            attacks[@enumToInt(Color.White)][square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 9)) & ~masks.file_masks[@enumToInt(File.A)];
         }
         if (square_v >= @enumToInt(Square.A2)) {
-            attacks[@enumToInt(Color.Black)][square_v] |= toBitboard(@intCast(u6, square_v - 7)) & ~masks.file_masks[@enumToInt(File.A)];
+            attacks[@enumToInt(Color.Black)][square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 7)) & ~masks.file_masks[@enumToInt(File.A)];
         }
         if (square_v >= @enumToInt(Square.B2)) {
-            attacks[@enumToInt(Color.Black)][square_v] |= toBitboard(@intCast(u6, square_v - 9)) & ~masks.file_masks[@enumToInt(File.H)];
+            attacks[@enumToInt(Color.Black)][square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 9)) & ~masks.file_masks[@enumToInt(File.H)];
         }
     }
     return attacks;
@@ -246,28 +246,28 @@ fn knightAttacksBB() [64]u64 {
     for (Square.all) |square| {
         const square_v = @enumToInt(square);
         if (square_v <= @enumToInt(Square.G6)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v + 17)) & ~masks.file_masks[@enumToInt(File.A)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 17)) & ~masks.file_masks[@enumToInt(File.A)];
         }
         if (square_v <= @enumToInt(Square.H6)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v + 15)) & ~masks.file_masks[@enumToInt(File.H)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 15)) & ~masks.file_masks[@enumToInt(File.H)];
         }
         if (square_v >= @enumToInt(Square.B3)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v - 17)) & ~masks.file_masks[@enumToInt(File.H)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 17)) & ~masks.file_masks[@enumToInt(File.H)];
         }
         if (square_v >= @enumToInt(Square.A3)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v - 15)) & ~masks.file_masks[@enumToInt(File.A)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 15)) & ~masks.file_masks[@enumToInt(File.A)];
         }
         if (square_v <= @enumToInt(Square.F7)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v + 10)) & ~(masks.file_masks[@enumToInt(File.A)] | masks.file_masks[@enumToInt(File.B)]);
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 10)) & ~(masks.file_masks[@enumToInt(File.A)] | masks.file_masks[@enumToInt(File.B)]);
         }
         if (square_v <= @enumToInt(Square.H7)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v + 6)) & ~(masks.file_masks[@enumToInt(File.H)] | masks.file_masks[@enumToInt(File.G)]);
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 6)) & ~(masks.file_masks[@enumToInt(File.H)] | masks.file_masks[@enumToInt(File.G)]);
         }
         if (square_v >= @enumToInt(Square.C2)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v - 10)) & ~(masks.file_masks[@enumToInt(File.H)] | masks.file_masks[@enumToInt(File.G)]);
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 10)) & ~(masks.file_masks[@enumToInt(File.H)] | masks.file_masks[@enumToInt(File.G)]);
         }
         if (square_v >= @enumToInt(Square.A2)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v - 6)) & ~(masks.file_masks[@enumToInt(File.A)] | masks.file_masks[@enumToInt(File.B)]);
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 6)) & ~(masks.file_masks[@enumToInt(File.A)] | masks.file_masks[@enumToInt(File.B)]);
         }
     }
     return attacks;
@@ -278,24 +278,24 @@ fn kingAttacksBB() [64]u64 {
     for (Square.all) |square| {
         const square_v = @enumToInt(square);
         if (square_v <= @enumToInt(Square.G7)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v + 9)) & ~masks.file_masks[@enumToInt(File.A)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 9)) & ~masks.file_masks[@enumToInt(File.A)];
         }
         if (square_v <= @enumToInt(Square.H7)) {
             attacks[square_v] |= @intCast(u64, 1) << @intCast(u6, square_v + 8);
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v + 7)) & ~masks.file_masks[@enumToInt(File.H)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 7)) & ~masks.file_masks[@enumToInt(File.H)];
         }
         if (square_v <= @enumToInt(Square.G8)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v + 1)) & ~masks.file_masks[@enumToInt(File.A)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v + 1)) & ~masks.file_masks[@enumToInt(File.A)];
         }
         if (square_v >= @enumToInt(Square.B1)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v - 1)) & ~masks.file_masks[@enumToInt(File.H)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 1)) & ~masks.file_masks[@enumToInt(File.H)];
         }
         if (square_v >= @enumToInt(Square.A2)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v - 7)) & ~masks.file_masks[@enumToInt(File.A)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 7)) & ~masks.file_masks[@enumToInt(File.A)];
             attacks[square_v] |= @intCast(u64, 1) << @intCast(u6, square_v - 8);
         }
         if (square_v >= @enumToInt(Square.B2)) {
-            attacks[square_v] |= toBitboard(@intCast(u6, square_v - 9)) & ~masks.file_masks[@enumToInt(File.H)];
+            attacks[square_v] |= bitboard.toBitboard(@intCast(u6, square_v - 9)) & ~masks.file_masks[@enumToInt(File.H)];
         }
     }
     return attacks;

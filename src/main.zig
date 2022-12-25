@@ -16,7 +16,7 @@ pub fn main() void {
         } else if (string.equals(line, "quit")) {
             break;
         } else {
-            console.println("Unsupported command: {}. Expected uci!", .{line});
+            console.println("Unsupported command: {s}. Expected uci!", .{line});
         }
     }
 }

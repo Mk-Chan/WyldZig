@@ -185,7 +185,7 @@ pub fn print(self: *Board) void {
         const square_flipped = @intToEnum(Square, @enumToInt(square) ^ 56);
         const optional_piece = self.pieceOn(square_flipped);
         if (optional_piece) |piece| {
-            console.printf("{} ", .{&[1]u8{piece.toChar()}});
+            console.printf("{s} ", .{&[1]u8{piece.toChar()}});
         } else {
             console.printf("- ", .{});
         }

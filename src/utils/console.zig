@@ -2,7 +2,7 @@ const std = @import("std");
 
 pub fn printf(comptime fmt: []const u8, args: anytype) void {
     const stdout = std.io.getStdOut().writer();
-    stdout.print(fmt, args) catch |err| {};
+    stdout.print(fmt, args) catch {};
 }
 
 pub fn println(comptime fmt: []const u8, args: anytype) void {
@@ -15,7 +15,7 @@ pub fn printNewLine() void {
 
 pub fn readln(buf: []u8) []const u8 {
     const stdin = std.io.getStdIn().reader();
-    var line = stdin.readUntilDelimiterOrEof(buf, '\n') catch |err| {
+    var line = stdin.readUntilDelimiterOrEof(buf, '\n') catch {
         unreachable;
     } orelse unreachable;
     return std.mem.trimRight(u8, line[0..], "\r");

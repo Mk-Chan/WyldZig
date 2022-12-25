@@ -1,5 +1,6 @@
 const std = @import("std");
 
+const console = @import("utils/console.zig");
 const Board = @import("types/Board.zig");
 const Move = @import("types/Move.zig");
 const MoveList = @import("types/MoveList.zig");
@@ -18,9 +19,9 @@ pub fn perft(board: *Board, depth: usize, root: bool) u64 {
     }
 
     if (root) {
-        comptime const num_threads: usize = 8;
+        const num_threads: usize = 8;
         var results = [_]u64{0} ** num_threads;
-        var move_num = std.atomic.Int(usize).init(0);
+        var move_num = std.atomic.Atomic(usize).init(0);
         var perft_data = PerftData{
             .board = board,
             .remaining_depth = depth - 1,
@@ -37,14 +38,12 @@ pub fn perft(board: *Board, depth: usize, root: bool) u64 {
                 .thread_index = thread_num,
                 .perft_data = &perft_data,
             };
-            threads[thread_num] = std.Thread.spawn(thread_data, getAndPerftMove) catch |err| {
-                unreachable;
-            };
+            threads[thread_num].* = std.Thread.spawn(.{}, getAndPerftMove, .{thread_data}) catch { unreachable; };
         }
 
         thread_num = 0;
         while (thread_num < num_threads) : (thread_num += 1) {
-            threads[thread_num].wait();
+            threads[thread_num].join();
             leaf_count += perft_data.results[thread_num];
         }
     } else {
@@ -70,7 +69,7 @@ fn getAndPerftMove(context: ThreadData) void {
     var perft_data = context.perft_data;
     var leaf_count: u64 = 0;
     while (true) {
-        const next_move_index = perft_data.move_num.fetchAdd(1);
+        const next_move_index = perft_data.move_num.fetchAdd(1, std.atomic.Ordering.SeqCst);
         if (next_move_index >= perft_data.num_moves) {
             break;
         }
@@ -87,7 +86,7 @@ const PerftData = struct {
     remaining_depth: usize,
     move_list: [*]Move,
     num_moves: usize,
-    move_num: *std.atomic.Int(usize),
+    move_num: *std.atomic.Atomic(usize),
     results: [*]u64,
 };
 

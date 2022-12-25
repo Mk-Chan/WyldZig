@@ -7,15 +7,15 @@ pub inline fn toBitboard(shift_value: u6) u64 {
 }
 
 pub inline fn bitscanForward(bb: u64) u7 {
-    return @ctz(u64, bb);
+    return @ctz(bb);
 }
 
 pub inline fn bitscanReverse(bb: u64) u7 {
-    return 63 - @clz(u64, bb);
+    return 63 - @clz(bb);
 }
 
 pub inline fn popcount(bb: u64) u7 {
-    return @popCount(u64, bb);
+    return @popCount(bb);
 }
 
 pub inline fn popBitForward(bb: *u64) void {

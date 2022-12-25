@@ -83,10 +83,10 @@ pub fn uci() void {
             if (parsed_move) |move| {
                 board.makeMove(move);
             } else {
-                console.println("Invalid move: {}", .{remaining});
+                console.println("Invalid move: {s}", .{remaining});
             }
         } else {
-            console.println("Unsupported command: {}", .{line});
+            console.println("Unsupported command: {s}", .{line});
         }
     }
 }

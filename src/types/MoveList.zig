@@ -8,7 +8,7 @@ pub const Iterator = struct {
     iter: [*]Move,
 
     pub fn addMove(self: *Iterator, move: Move) void {
-        self.*.iter.* = move;
+        self.*.iter[0] = move;
         self.*.iter += 1;
     }
 };
